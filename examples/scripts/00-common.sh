@@ -172,37 +172,12 @@ capture_mountstats() {
 
   mountpoint="$(resolve_data_mountpoint)"
 
-  {
-    printf '# label=%s\n' "$label"
-    printf '# timestamp_utc=%s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-    printf '# hostname=%s\n' "$(hostname)"
-    printf '# data_dir=%s\n' "$DATA_DIR"
-    printf '# mountpoint=%s\n' "$mountpoint"
-
-    awk -v mp="$mountpoint" '
-      /^device / {
-        if (capture) {
-          exit
-        }
-        if (index($0, " mounted on " mp " with fstype nfs") > 0 ||
-            index($0, " mounted on " mp " with fstype nfs4") > 0) {
-          capture = 1
-        }
-      }
-      capture { print }
-    ' /proc/self/mountstats
-  } >"$output_file"
-
-  if ! grep -q '^device ' "$output_file"; then
-    warn "No NFS mountstats section was found for mountpoint $mountpoint. Saving the full file instead."
-    {
-      printf '# label=%s\n' "$label"
-      printf '# timestamp_utc=%s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-      printf '# hostname=%s\n' "$(hostname)"
-      printf '# data_dir=%s\n' "$DATA_DIR"
-      printf '# mountpoint=%s\n' "$mountpoint"
-      cat /proc/self/mountstats
-    } >"$output_file"
+  if ! command -v mountstats >/dev/null 2>&1; then
+    warn "mountstats is not installed; saving the full kernel mountstats file."
+    cat /proc/self/mountstats >"$output_file"
+  elif ! mountstats mountstats --raw "$mountpoint" >"$output_file"; then
+    warn "No NFS mountstats section was found for mountpoint $mountpoint; saving the full kernel mountstats file."
+    cat /proc/self/mountstats >"$output_file"
   fi
 
   log "Mountstats snapshot written to $output_file"
