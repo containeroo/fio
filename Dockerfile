@@ -1,19 +1,19 @@
 # syntax=docker/dockerfile:1.23
 FROM alpine:3.24.1
 
-# renovate: datasource=repology depName=alpine_3_24/bash versioning=apk
+# alpine-package: name=bash repo=main
 ARG BASH_VERSION=5.3.9-r1
-# renovate: datasource=repology depName=alpine_3_24/catatonit versioning=apk
+# alpine-package: name=catatonit repo=community
 ARG CATATONIT_VERSION=0.2.1-r0
-# renovate: datasource=repology depName=alpine_3_24/fio versioning=apk
+# alpine-package: name=fio repo=main
 ARG FIO_VERSION=3.41-r0
-# renovate: datasource=repology depName=alpine_3_24/jq versioning=apk
+# alpine-package: name=jq repo=main
 ARG JQ_VERSION=1.8.1-r0
-# renovate: datasource=repology depName=alpine_3_24/nfs-utils versioning=apk
+# alpine-package: name=nfs-utils repo=main
 ARG NFS_UTILS_VERSION=2.6.4-r6
-# renovate: datasource=repology depName=alpine_3_24/procps-ng versioning=apk
+# alpine-package: name=procps-ng repo=main
 ARG PROCPS_NG_VERSION=4.0.6-r0
-# renovate: datasource=repology depName=alpine_3_24/util-linux versioning=apk
+# alpine-package: name=util-linux repo=main
 ARG UTIL_LINUX_VERSION=2.42.1-r0
 
 RUN apk add --no-cache \
@@ -44,5 +44,4 @@ STOPSIGNAL SIGTERM
 ENTRYPOINT ["/usr/bin/catatonit", "--"]
 # Replace with your real process if needed
 CMD ["/bin/bash", "-lc", "sleep infinity"]
-
 

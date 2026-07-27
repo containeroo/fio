@@ -9,8 +9,10 @@ The image includes:
 - `catatonit` as PID 1 for signal forwarding and zombie reaping
 - Bash for the default command and benchmark scripts
 
-The Alpine image tag and every explicitly installed APK are tracked by
-Renovate.
+## Dependency updates
+
+- Alpine package pins are updated by the scheduled GitHub workflow in `.github/workflows/update-alpine-packages.yaml`, which reads the official Alpine `APKINDEX` metadata for the Alpine version pinned in the `Dockerfile`.
+- Renovate remains enabled for Alpine base image updates.
 
 ## Run
 
