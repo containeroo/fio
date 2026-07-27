@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "semanticCommits": "enabled",
+  "dependencyDashboard": true,
+  "labels": ["dependency"],
+  "minimumReleaseAge": "1 day",
+  "prCreation": "not-pending",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile(?:\\.[^/]*)?$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?(?: registryUrl=(?<registryUrl>\\S+))?(?: extractVersion=(?<extractVersion>\\S+))?\\s+ARG [A-Z0-9_]+_VERSION=(?<currentValue>\\S+)"
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["repology"],
+      "matchPackageNames": ["alpine_3_24/**"],
+      "groupName": "Alpine 3.24 packages"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["alpine"],
+      "groupName": "Alpine base image",
+      "allowedVersions": "/^3\\.24\\./"
+    }
+  ],
+  "pre-commit": {
+    "enabled": true
+  }
+}

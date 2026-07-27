@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fio-nfs-test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: fio
+      image: ghcr.io/containeroo/fio:v0.0.1
+      resources:
+        requests:
+          cpu: "2"
+          memory: 2Gi
+        limits:
+          cpu: "4"
+          memory: 4Gi
+      env:
+        - name: DATA_ROOT
+          value: /data
+        - name: DATA_DIR
+          value: /data/fio-test
+        - name: RESULT_DIR
+          value: /tmp/fio-results
+        - name: RUNTIME
+          value: "60"
+        - name: RAMP_TIME
+          value: "10"
+        - name: TEST_SIZE
+          value: 2G
+        - name: LIMITED_SEQ_SIZE
+          value: 8G
+        - name: LIMITED_SEQ_WRITE_RATE
+          value: 50M
+        - name: LIMITED_RAND_READ_IOPS
+          value: "500"
+        - name: LIMITED_RAND_WRITE_IOPS
+          value: "250"
+        - name: LIMITED_FDATASYNC_IOPS
+          value: "100"
+        - name: TEST_PAUSE
+          value: "30"
+      volumeMounts:
+        - name: test-data
+          mountPath: /data
+        - name: user-work
+          mountPath: /work
+          subPath: scripts
+          readOnly: true
+        - name: user-work
+          mountPath: /work/results
+          subPath: results
+  volumes:
+    - name: test-data
+      persistentVolumeClaim:
+        claimName: fio-nfs-test
+    - name: user-work
+      configMap:
+        name: fio-nfs-tests
+        defaultMode: 0555

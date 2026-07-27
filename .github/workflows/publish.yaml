@@ -1,0 +1,53 @@
+name: Publish container image
+
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: "The image version"
+        value: ${{ jobs.multi-arch-build.outputs.version }}
+
+jobs:
+  multi-arch-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare release tag
+        id: tag
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          labels: |
+            org.opencontainers.image.title=fio
+            org.opencontainers.image.description=Fio storage benchmark image based on Alpine Linux
+            org.opencontainers.image.url=https://github.com/containeroo/fio
+            org.opencontainers.image.source=https://github.com/containeroo/fio
+            org.opencontainers.image.version=${{ steps.tag.outputs.version }}
+          tags: |
+            ghcr.io/containeroo/fio:${{ steps.tag.outputs.version }}
+            ghcr.io/containeroo/fio:latest
+
+    outputs:
+      version: ${{ steps.tag.outputs.version }}
