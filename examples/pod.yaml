@@ -7,7 +7,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: fio
-      image: ghcr.io/containeroo/fio:v0.0.1
+      image: ghcr.io/containeroo/fio:latest
       resources:
         requests:
           cpu: "2"
@@ -21,7 +21,7 @@ spec:
         - name: DATA_DIR
           value: /data/fio-test
         - name: RESULT_DIR
-          value: /tmp/fio-results
+          value: /work/results
         - name: RUNTIME
           value: "60"
         - name: RAMP_TIME
@@ -43,18 +43,14 @@ spec:
       volumeMounts:
         - name: test-data
           mountPath: /data
-        - name: user-work
-          mountPath: /work
-          subPath: scripts
+        - name: scripts
+          mountPath: /work/scripts
           readOnly: true
-        - name: user-work
-          mountPath: /work/results
-          subPath: results
   volumes:
     - name: test-data
       persistentVolumeClaim:
         claimName: fio-nfs-test
-    - name: user-work
+    - name: scripts
       configMap:
         name: fio-nfs-tests
         defaultMode: 0555
