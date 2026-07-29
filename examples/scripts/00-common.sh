@@ -317,3 +317,23 @@ EOF_CONTEXT
 
 ensure_directories
 assert_safe_data_dir
+
+# BEGIN RANDOM READ SOURCE SETTINGS
+# -----------------------------------------------------------------------------
+# Parameter fuer den vorbereiteten Random-Read-Test
+# -----------------------------------------------------------------------------
+
+# Separate Quelldatei fuer den Random-Read-Test. Sie wird durch
+# 19-prepare-random-read-file.sh vollstaendig geschrieben, bevor die gemessene
+# Leselast beginnt. Dadurch erzeugt 21-random-read-limited.sh keine versteckten
+# Vorbereitungs-Writes innerhalb seines Mountstats-Intervalls.
+READ_FILE="${READ_FILE:-$DATA_DIR/random-read-source.bin}"
+
+# Physische Groesse der vorbereiteten Quelldatei. 2G begrenzt die zusaetzliche
+# Schreiblast der Limited Suite und reicht fuer den kontrollierten 4-KiB-Test.
+READ_FILE_SIZE="${READ_FILE_SIZE:-2G}"
+
+# Maximale Schreibrate beim Vorbereiten der Random-Read-Quelldatei.
+# Der Prepare-Schritt ist nicht zeitbasiert und schreibt exakt READ_FILE_SIZE.
+PREP_RATE="${PREP_RATE:-50M}"
+# END RANDOM READ SOURCE SETTINGS

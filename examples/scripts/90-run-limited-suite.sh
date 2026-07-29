@@ -15,6 +15,7 @@ MSG
 pause_between_tests
 "$SCRIPT_DIR/20-sequential-write-limited.sh"
 pause_between_tests
+"$SCRIPT_DIR/19-prepare-random-read-file.sh"
 "$SCRIPT_DIR/21-random-read-limited.sh"
 pause_between_tests
 "$SCRIPT_DIR/22-random-write-limited.sh"

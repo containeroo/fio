@@ -11,13 +11,15 @@ test_file="$DATA_DIR/sequential-limited.bin"
 run_fio_test \
   "21-random-read-limited" \
   "$RESULT_DIR/21-random-read-limited.json" \
+  --readonly \
   --name=random-read-4k-limited \
   --filename="$test_file" \
   --rw=randread \
   --bs=4k \
-  --size="$LIMITED_SEQ_SIZE" \
+  --size="$READ_FILE_SIZE" \
   --ioengine="$IOENGINE" \
   --direct="$DIRECT" \
+  --allow_file_create=0 \
   --invalidate=1 \
   --rate_iops="$LIMITED_RAND_READ_IOPS" \
   --time_based=1 \
