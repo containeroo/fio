@@ -8,13 +8,13 @@ ARG CATATONIT_VERSION=0.2.1-r0
 # alpine-package: name=fio repo=main
 ARG FIO_VERSION=3.41-r0
 # alpine-package: name=jq repo=main
-ARG JQ_VERSION=1.8.1-r0
+ARG JQ_VERSION=1.8.2-r0
 # alpine-package: name=nfs-utils repo=main
 ARG NFS_UTILS_VERSION=2.6.4-r6
 # alpine-package: name=procps-ng repo=main
 ARG PROCPS_NG_VERSION=4.0.6-r0
 # alpine-package: name=util-linux repo=main
-ARG UTIL_LINUX_VERSION=2.42.1-r0
+ARG UTIL_LINUX_VERSION=2.42.3-r1
 
 RUN apk add --no-cache \
   "bash=${BASH_VERSION}" \
